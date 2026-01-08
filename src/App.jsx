@@ -1,6 +1,7 @@
 import React from 'react';
 import { APIProvider } from '@vis.gl/react-google-maps';
 import MapComponent from './components/MapComponent';
+import { SearchComponent } from './components/SearchComponent';
 import { useLocationTracker } from './hooks/useLocationTracker';
 
 const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '';
@@ -18,6 +19,14 @@ function App() {
       lat: newPos.lat,
       lng: newPos.lng,
       accuracy: manualLocation?.accuracy || trackedLocation?.accuracy || 0
+    });
+  };
+
+  const handlePlaceSelect = (place) => {
+    setManualLocation({
+      lat: place.lat,
+      lng: place.lng,
+      accuracy: 0 // Selected places are precise
     });
   };
 
@@ -40,8 +49,10 @@ function App() {
   }
 
   return (
-    <APIProvider apiKey={API_KEY}>
+    <APIProvider apiKey={API_KEY} libraries={['places']}>
       <div className="h-screen w-full relative">
+        <SearchComponent onPlaceSelect={handlePlaceSelect} />
+
         {error && (
           <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
             <strong>Error: </strong> {error}
@@ -51,14 +62,14 @@ function App() {
         <div className="absolute top-4 left-4 z-10 bg-white p-4 rounded shadow-md">
           <div className="flex justify-between items-center mb-2">
             <h1 className="text-xl font-bold">Location Tracker</h1>
-            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full ml-2">v1.2</span>
+            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full ml-2">v1.3</span>
           </div>
           {displayLocation ? (
             <div>
               <p>Lat: {displayLocation.lat.toFixed(6)}</p>
               <p>Lng: {displayLocation.lng.toFixed(6)}</p>
               <p className="text-sm text-gray-500 mt-1">
-                Accuracy: {displayLocation.accuracy ? `${Math.round(displayLocation.accuracy)}m` : 'N/A'}
+                Accuracy: {displayLocation.accuracy ? `${Math.round(displayLocation.accuracy)}m` : 'Precise'}
               </p>
               <p className="text-xs text-orange-600 mt-2 italic">
                 * Drag marker to correct location
