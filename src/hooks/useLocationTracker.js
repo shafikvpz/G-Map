@@ -11,8 +11,8 @@ export const useLocationTracker = () => {
     }
 
     const handleSuccess = (position) => {
-      const { latitude, longitude } = position.coords;
-      setLocation({ lat: latitude, lng: longitude });
+      const { latitude, longitude, accuracy } = position.coords;
+      setLocation({ lat: latitude, lng: longitude, accuracy });
       setError(null);
     };
 

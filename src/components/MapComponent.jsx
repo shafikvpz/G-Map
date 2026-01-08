@@ -6,8 +6,27 @@ const MapComponent = ({ location }) => {
 
     useEffect(() => {
         if (map && location) {
-            map.panTo(location);
+            map.panTo({ lat: location.lat, lng: location.lng });
         }
+    }, [map, location]);
+
+    useEffect(() => {
+        if (!map || !location || !location.accuracy) return;
+
+        const circle = new google.maps.Circle({
+            strokeColor: '#4285F4',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#4285F4',
+            fillOpacity: 0.35,
+            map,
+            center: { lat: location.lat, lng: location.lng },
+            radius: location.accuracy
+        });
+
+        return () => {
+            circle.setMap(null);
+        };
     }, [map, location]);
 
     return (

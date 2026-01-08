@@ -39,6 +39,7 @@ function App() {
             <div>
               <p>Lat: {location.lat.toFixed(6)}</p>
               <p>Lng: {location.lng.toFixed(6)}</p>
+              <p className="text-sm text-gray-500 mt-1">Accuracy: {location.accuracy ? `${Math.round(location.accuracy)}m` : 'N/A'}</p>
             </div>
           ) : (
             <p className="text-gray-500">Locating...</p>
