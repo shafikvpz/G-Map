@@ -22,8 +22,8 @@ export const useLocationTracker = () => {
 
     const options = {
       enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 0,
+      timeout: 15000,
+      maximumAge: 10000,
     };
 
     const watchId = navigator.geolocation.watchPosition(handleSuccess, handleError, options);
