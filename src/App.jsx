@@ -3,6 +3,7 @@ import { APIProvider } from '@vis.gl/react-google-maps';
 import MapComponent from './components/MapComponent';
 import { SearchComponent } from './components/SearchComponent';
 import { useLocationTracker } from './hooks/useLocationTracker';
+import { useGeocoding } from './hooks/useGeocoding';
 
 const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '';
 
@@ -15,6 +16,9 @@ function App() {
 
   // Use manual location if available, otherwise fallback to tracked location
   const displayLocation = manualLocation || trackedLocation;
+
+  // Fetch address for the displayed location
+  const { address } = useGeocoding(displayLocation);
 
   // Update manual location when user drags the marker
   const handleLocationChange = (newPos) => {
@@ -74,7 +78,7 @@ function App() {
         <div className="absolute top-4 left-4 z-10 bg-white p-4 rounded shadow-md">
           <div className="flex justify-between items-center mb-2">
             <h1 className="text-xl font-bold">Location Tracker</h1>
-            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full ml-2">v1.3</span>
+            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full ml-2">v1.4</span>
           </div>
           {displayLocation ? (
             <div>
@@ -83,6 +87,11 @@ function App() {
               <p className="text-sm text-gray-500 mt-1">
                 Accuracy: {displayLocation.accuracy ? `${Math.round(displayLocation.accuracy)}m` : 'Precise'}
               </p>
+              {address && (
+                <p className="text-sm font-medium text-gray-800 mt-1">
+                  📍 {address}
+                </p>
+              )}
               <p className="text-xs text-orange-600 mt-2 italic">
                 * Drag marker to correct location
               </p>
