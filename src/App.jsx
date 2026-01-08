@@ -6,7 +6,22 @@ import { useLocationTracker } from './hooks/useLocationTracker';
 const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '';
 
 function App() {
-  const { location, error } = useLocationTracker();
+  const { location: trackedLocation, error } = useLocationTracker();
+  const [manualLocation, setManualLocation] = React.useState(null);
+
+  // Use manual location if available, otherwise fallback to tracked location
+  const displayLocation = manualLocation || trackedLocation;
+
+  // Update manual location when user drags the marker
+  const handleLocationChange = (newPos) => {
+    setManualLocation({
+      lat: newPos.lat,
+      lng: newPos.lng,
+      accuracy: manualLocation?.accuracy || trackedLocation?.accuracy || 0
+    });
+  };
+
+  // Reset manual location if needed (optional, maybe added later)
 
   if (!API_KEY) {
     return (
@@ -36,20 +51,25 @@ function App() {
         <div className="absolute top-4 left-4 z-10 bg-white p-4 rounded shadow-md">
           <div className="flex justify-between items-center mb-2">
             <h1 className="text-xl font-bold">Location Tracker</h1>
-            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full ml-2">v1.1</span>
+            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full ml-2">v1.2</span>
           </div>
-          {location ? (
+          {displayLocation ? (
             <div>
-              <p>Lat: {location.lat.toFixed(6)}</p>
-              <p>Lng: {location.lng.toFixed(6)}</p>
-              <p className="text-sm text-gray-500 mt-1">Accuracy: {location.accuracy ? `${Math.round(location.accuracy)}m` : 'N/A'}</p>
+              <p>Lat: {displayLocation.lat.toFixed(6)}</p>
+              <p>Lng: {displayLocation.lng.toFixed(6)}</p>
+              <p className="text-sm text-gray-500 mt-1">
+                Accuracy: {displayLocation.accuracy ? `${Math.round(displayLocation.accuracy)}m` : 'N/A'}
+              </p>
+              <p className="text-xs text-orange-600 mt-2 italic">
+                * Drag marker to correct location
+              </p>
             </div>
           ) : (
             <p className="text-gray-500">Locating...</p>
           )}
         </div>
 
-        <MapComponent location={location} />
+        <MapComponent location={displayLocation} onLocationChange={handleLocationChange} />
       </div>
     </APIProvider>
   );

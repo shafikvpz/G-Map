@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Map, AdvancedMarker, Pin, useMap } from '@vis.gl/react-google-maps';
 
-const MapComponent = ({ location }) => {
+const MapComponent = ({ location, onLocationChange }) => {
     const map = useMap();
 
     useEffect(() => {
@@ -38,7 +38,15 @@ const MapComponent = ({ location }) => {
                 className="h-full w-full"
             >
                 {location && (
-                    <AdvancedMarker position={location}>
+                    <AdvancedMarker
+                        position={location}
+                        draggable={true}
+                        onDragEnd={(e) => {
+                            if (e.latLng && onLocationChange) {
+                                onLocationChange({ lat: e.latLng.lat(), lng: e.latLng.lng() });
+                            }
+                        }}
+                    >
                         <Pin background={'#FBBC04'} glyphColor={'#000'} borderColor={'#000'} />
                     </AdvancedMarker>
                 )}
