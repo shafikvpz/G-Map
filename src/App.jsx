@@ -34,7 +34,10 @@ function App() {
         )}
 
         <div className="absolute top-4 left-4 z-10 bg-white p-4 rounded shadow-md">
-          <h1 className="text-xl font-bold mb-2">Location Tracker</h1>
+          <div className="flex justify-between items-center mb-2">
+            <h1 className="text-xl font-bold">Location Tracker</h1>
+            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full ml-2">v1.1</span>
+          </div>
           {location ? (
             <div>
               <p>Lat: {location.lat.toFixed(6)}</p>
