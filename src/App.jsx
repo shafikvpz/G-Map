@@ -78,10 +78,19 @@ function App() {
         <div className="absolute top-4 left-4 z-10 bg-white p-4 rounded shadow-md">
           <div className="flex justify-between items-center mb-2">
             <h1 className="text-xl font-bold">Location Tracker</h1>
-            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full ml-2">v1.4</span>
+            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full ml-2">v1.5</span>
           </div>
           {displayLocation ? (
             <div>
+              {displayLocation.accuracy > 500 && (
+                <div className="bg-yellow-50 border-l-4 border-yellow-400 p-2 mb-2">
+                  <p className="text-xs text-yellow-700">
+                    ⚠️ <strong>Low Accuracy</strong> ({Math.round(displayLocation.accuracy)}m).
+                    The location shown is just an estimate.
+                  </p>
+                </div>
+              )}
+
               <p>Lat: {displayLocation.lat.toFixed(6)}</p>
               <p>Lng: {displayLocation.lng.toFixed(6)}</p>
               <p className="text-sm text-gray-500 mt-1">
